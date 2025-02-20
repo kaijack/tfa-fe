@@ -4,18 +4,16 @@ import { MenuItem } from "types/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
-
 export const useGetMenus = () =>
   useQuery<MenuItem[]>({
-    queryKey: ["menus"],
+    queryKey: ["menus"], // Define the query key for menus
     queryFn: async () => {
       const response = await axios.get(`${API_URL}/menus/hierarchy`);
-      return response.data; 
+      return response.data;
     },
   });
 
-
-export const useCreateMenu = () => {
+export const useCreateMenu = (menu?: MenuItem) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (menu: MenuItem) => {
@@ -25,14 +23,13 @@ export const useCreateMenu = () => {
       return response.data.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["menus"]); 
+      queryClient.invalidateQueries({ queryKey: ["menus"] }); // Use an object with queryKey
     },
     onError: (error) => {
       console.error("Error creating menu:", error);
     },
   });
 };
-
 
 export const useUpdateMenu = () => {
   const queryClient = useQueryClient();
@@ -44,14 +41,13 @@ export const useUpdateMenu = () => {
       return response.data.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["menus"]); 
+      queryClient.invalidateQueries({ queryKey: ["menus"] }); // Use an object with queryKey
     },
     onError: (error) => {
       console.error("Error updating menu:", error);
     },
   });
 };
-
 
 export const useDeleteMenu = () => {
   const queryClient = useQueryClient();
@@ -60,7 +56,7 @@ export const useDeleteMenu = () => {
       await axios.delete(`${API_URL}/menus/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["menus"]); 
+      queryClient.invalidateQueries({ queryKey: ["menus"] }); // Use an object with queryKey
     },
     onError: (error) => {
       console.error("Error deleting menu:", error);
