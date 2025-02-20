@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.tree-container {
+  position: relative;
+  padding-left: 1rem; /* Adjust for consistent spacing */
+}
+
+.tree-container ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tree-container li {
+  position: relative;
+  padding-left: 1.5rem; /* Space for tree lines */
+}
+
+.tree-container .line-vertical {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background-color: #d1d5db; /* Tailwind's gray-300 */
+}
+
+.tree-container .line-horizontal {
+  position: absolute;
+  top: 50%;
+  left: -12px;
+  height: 1px;
+  width: 12px;
+  background-color: #d1d5db; /* Tailwind's gray-300 */
+}

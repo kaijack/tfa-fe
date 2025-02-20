@@ -1,0 +1,9 @@
+name = "tfa-frontend"
+compatibility_date = "2025-01-19"
+
+[build]
+  command = "npm run build"
+  cwd = "./"
+
+[site]
+  bucket = "./out"
