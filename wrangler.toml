@@ -1,9 +1,11 @@
 name = "tfa-frontend"
-compatibility_date = "2025-01-19"
+compatibility_date = "2025-02-20"
 
 [build]
   command = "npm run build"
   cwd = "./"
 
 [site]
-  bucket = "./out"
+  bucket = "./out" # Path where your static files are generated
+
+pages_build_output_dir = "out" # Ensure this points to your build output
