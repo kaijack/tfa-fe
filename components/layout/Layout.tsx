@@ -14,7 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ children, menu, loading, menuName, onMe
   return (
     <div className="flex flex-row w-full h-screen">
       {/* Sidebar */}
-      <Sidebar menu={menu} loading={loading} onMenuClick={onMenuClick} />
+      <Sidebar menu={menu} loading={loading} onMenuClick={onMenuClick} menuName={menuName} />
 
       {/* Main Content */}
       <div className="flex flex-col flex-grow">
