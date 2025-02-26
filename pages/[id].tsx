@@ -4,6 +4,7 @@ import Layout from "@/components/layout/Layout";
 import { useRouter } from "next/router";
 import { useGetMenus } from "@/api/menus";
 import { MenuItem } from "types/types";
+import { findMenuById, normalizeName, transformMenus } from "utils/helpers";
 
 const MenuPage = () => {
   const router = useRouter();
@@ -14,59 +15,24 @@ const MenuPage = () => {
   const [DynamicComponent, setDynamicComponent] = useState<React.ReactNode>(null);
   const { data, isLoading, isError } = useGetMenus();
 
-  const normalizeName = (name: string) =>
-    encodeURIComponent(
-      name
-        .trim()
-        .replace(/\s+/g, "-")
-        .replace(/[^a-zA-Z0-9\-]/g, "")
-    );
-
-  const denormalizeName = (name: string) =>
-    decodeURIComponent(name.replace(/-/g, " "));
-
-  const transformMenus = (data: MenuItem[]): MenuItem[] => {
-    return data?.map((menu) => ({
-      id: menu.id || "",
-      name: menu.name || "Unnamed Menu",
-      depth: menu.depth || 0,
-      parent_id: menu.parent_id || "",
-      parent_name: menu.parent_name || "",
-      children: menu.children ? transformMenus(menu.children) : [],
-    }));
-  };
-
-  const findMenuById = (menuList: MenuItem[], normalizedId: string): MenuItem | null => {
-    for (const menu of menuList) {
-      if (normalizeName(menu.id) === normalizedId || normalizeName(menu.name) === normalizedId) {
-        return menu;
-      }
-      if (menu.children) {
-        const found = findMenuById(menu.children, normalizedId);
-        if (found) return found;
-      }
-    }
-    return null;
-  };
-
   const loadDynamicComponent = async (menuName: string) => {
     try {
-      const normalizedMenuName = normalizeName(menuName);
-      console.log("Loading dynamic component for:", normalizedMenuName);
+        const normalizedMenuName = normalizeName(menuName);
+        console.log("Loading dynamic component for:", normalizedMenuName);
 
-      const Component = dynamic(() =>
-        import(`@/components/DynamicPages/${normalizedMenuName}`).catch(() => {
-         
-          return () => <div>Component not found for menu: {menuName}</div>;
-        })
-      );
+        const Component = dynamic(() =>
+            import(`@/components/DynamicPages/${normalizedMenuName}`).catch(() => {
 
-      setDynamicComponent(<Component />);
+                return () => <div>Component not found for menu: {menuName}</div>;
+            })
+        );
+
+        setDynamicComponent(<Component />);
     } catch (error) {
-      console.error(`Error loading dynamic component for menu "${menuName}":`, error);
-      setDynamicComponent(<div>Failed to load component</div>);
+        console.error(`Error loading dynamic component for menu "${menuName}":`, error);
+        setDynamicComponent(<div>Failed to load component</div>);
     }
-  };
+};
  
   useEffect(() => {
     if (data) {
@@ -88,8 +54,6 @@ const MenuPage = () => {
 
   const handleMenuClick = (menuId: string) => {
     const normalizedMenuId = normalizeName(menuId);
-    console.log("Navigating to:", normalizedMenuId);
-  
    
     router
       .push(`/${normalizedMenuId}`)

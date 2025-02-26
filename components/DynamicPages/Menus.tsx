@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useGetMenus } from "@/api/menus";
-import MenuTreeFilters from "../MenuTree/MenuTreeFilters";
-import MenuTreeActions from "../MenuTree/MenuTreeActions";
-import MenuTreeNode from "../MenuTree/MenuTreeNode";
+import MenuTreeFilters from "@/components/MenuTree/MenuTreeFilters";
+import MenuTreeActions from "@/components/MenuTree/MenuTreeActions";
+import MenuTreeNode from "@/components/MenuTree/MenuTreeNode";
 import MenuForm from "./Menu-Registration";
 import { MenuItem } from "types/types";
 import { useRouter } from "next/router";
+import { markCanAddChild } from "utils/helpers";
 
 const MenuTree: React.FC = () => {
   const router = useRouter();
   const { data: menus = [], isLoading, isError } = useGetMenus();
-  const [selectedFilter, setSelectedFilter] = useState<string>("All");
+  const [selectedFilter, setSelectedFilter] = useState<string>("");
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
   const [selectedMenu, setSelectedMenu] = useState<MenuItem | null>(null);
   const [showForm, setShowForm] = useState(false);
-
-  useEffect(() => {
-    if (menus.length > 0 && selectedFilter === "All") {
-      setSelectedFilter(menus[0]?.name || "All");
-    }
-  }, [menus]);
 
   useEffect(() => {
     if (menus.length > 0) {
@@ -37,12 +32,9 @@ const MenuTree: React.FC = () => {
       collectNodeIds(menus);
       setExpandedNodes(allNodeIds);
     }
-  }, [menus]); 
+  }, [menus]);
 
-  const filteredMenus =
-    selectedFilter === "All"
-      ? menus
-      : menus?.filter((menu: any) => menu.name.startsWith(selectedFilter));
+  const filteredMenus = menus?.filter((menu: any) => menu.name.startsWith(selectedFilter));
 
   const handleSave = async (menu: MenuItem) => {
     try {
@@ -68,20 +60,6 @@ const MenuTree: React.FC = () => {
       query: isParams
     });
   }
-
-  const markCanAddChild = (menus: MenuItem[]): MenuItem[] => {
-    return menus.map((menu, index) => {
-      const updatedChildren = markCanAddChild(menu.children);
-
-      const lastChild = updatedChildren.length > 0 ? updatedChildren[updatedChildren.length - 1] : null;
-      return {
-        ...menu,
-        children: updatedChildren,
-        canAddChild: index === 0 && lastChild !== null && lastChild.children.length === 0,
-
-      };
-    });
-  };
 
   const toggleExpand = (menuId: string) => {
     setExpandedNodes((prev) => {

@@ -1,13 +1,14 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/router";
 import { updateMenu, useCreateMenu } from "@/api/menus";
-import { MenuFormProps, MenuItem } from "../../types/types";
+import { MenuFormProps } from "../../types/types";
 import { useQueryClient } from "@tanstack/react-query";
 
 const MenuForm: React.FC<MenuFormProps> = ({ onSave, initialData = null, handleExpandAll }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [menuData, setMenuData] = useState({
     id: initialData?.id || "",
     parent_id: Array.isArray(router.query?.parent_id) ? router.query.parent_id[0] : router.query?.parent_id || initialData?.parent_id || "",
@@ -38,6 +39,7 @@ const MenuForm: React.FC<MenuFormProps> = ({ onSave, initialData = null, handleE
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true); 
     try {
       let updatedMenu = null;
 
@@ -50,17 +52,13 @@ const MenuForm: React.FC<MenuFormProps> = ({ onSave, initialData = null, handleE
 
       if (updatedMenu) {
         await queryClient.invalidateQueries({ queryKey: ["menus"] });
-        setTimeout(() => {
-
-          handleExpandAll() 
-        }, 500);
       }
     } catch (error) {
       console.error("Error saving menu:", error);
+    } finally {
+      setIsSubmitting(false); 
     }
   };
-
-
 
   return (
     <div className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-lg">
@@ -98,8 +96,12 @@ const MenuForm: React.FC<MenuFormProps> = ({ onSave, initialData = null, handleE
           <button type="button" className="px-6 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300" onClick={router.back}>
             Cancel
           </button>
-          <button type="submit" className="px-6 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600">
-            Save
+          <button
+            type="submit"
+            className={`px-6 py-2 rounded-lg text-white ${isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"}`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Saving..." : "Save"}
           </button>
         </div>
       </form>
