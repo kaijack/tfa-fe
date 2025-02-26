@@ -1,43 +1,113 @@
 import React, { useState, useEffect } from "react";
-import { useGetMenus, useCreateMenu, useUpdateMenu, useDeleteMenu } from "@/api/menus";
+import { useGetMenus } from "@/api/menus";
 import MenuTreeFilters from "../MenuTree/MenuTreeFilters";
 import MenuTreeActions from "../MenuTree/MenuTreeActions";
 import MenuTreeNode from "../MenuTree/MenuTreeNode";
 import MenuForm from "./Menu-Registration";
 import { MenuItem } from "types/types";
+import { useRouter } from "next/router";
 
 const MenuTree: React.FC = () => {
+  const router = useRouter();
   const { data: menus = [], isLoading, isError } = useGetMenus();
   const [selectedFilter, setSelectedFilter] = useState<string>("All");
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
   const [selectedMenu, setSelectedMenu] = useState<MenuItem | null>(null);
   const [showForm, setShowForm] = useState(false);
 
-  const { mutate: createMenu } = useCreateMenu();
-  const { mutate: updateMenu } = useUpdateMenu();
-  const { mutate: deleteMenu } = useDeleteMenu();
-
   useEffect(() => {
     if (menus.length > 0 && selectedFilter === "All") {
       setSelectedFilter(menus[0]?.name || "All");
     }
   }, [menus]);
-  
+
+  useEffect(() => {
+    if (menus.length > 0) {
+      const allNodeIds = new Set<string>();
+
+      const collectNodeIds = (items: MenuItem[]) => {
+        items.forEach((item) => {
+          allNodeIds.add(item.id);
+          if (item.children && item.children.length > 0) {
+            collectNodeIds(item.children);
+          }
+        });
+      };
+
+      collectNodeIds(menus);
+      setExpandedNodes(allNodeIds);
+    }
+  }, [menus]); 
+
   const filteredMenus =
     selectedFilter === "All"
       ? menus
       : menus?.filter((menu: any) => menu.name.startsWith(selectedFilter));
 
-  const handleSave = (menu: MenuItem) => {
-    if (menu.id) {
-      updateMenu(menu); 
-    } else {
-      createMenu(menu); 
+  const handleSave = async (menu: MenuItem) => {
+    try {
+      setShowForm(false);
+    } catch (error) {
+      console.error("Error saving menu:", error);
     }
-    setShowForm(false);
   };
 
-  const isDataOptions = menus?.map((x) => x?.name);
+  const isDataOptions = menus?.map((x: MenuItem) => x?.name);
+
+  function addChildMenu(params: any) {
+    const isParams = {
+      id: "",
+      parent_id: params?.id || "",
+      parent_name: params?.name || "",
+      name: "",
+      depth: params?.depth + 1 || 0,
+      children: [],
+    }
+    router.push({
+      pathname: "/Menu-Registration",
+      query: isParams
+    });
+  }
+
+  const markCanAddChild = (menus: MenuItem[]): MenuItem[] => {
+    return menus.map((menu, index) => {
+      const updatedChildren = markCanAddChild(menu.children);
+
+      const lastChild = updatedChildren.length > 0 ? updatedChildren[updatedChildren.length - 1] : null;
+      return {
+        ...menu,
+        children: updatedChildren,
+        canAddChild: index === 0 && lastChild !== null && lastChild.children.length === 0,
+
+      };
+    });
+  };
+
+  const toggleExpand = (menuId: string) => {
+    setExpandedNodes((prev) => {
+      const newExpandedNodes = new Set(prev);
+      if (newExpandedNodes.has(menuId)) {
+        newExpandedNodes.delete(menuId);
+      } else {
+        newExpandedNodes.add(menuId);
+      }
+      return newExpandedNodes;
+    });
+  };
+
+  const handleExpandAll = () => {
+    const allNodeIds = new Set<string>();
+    const collectNodeIds = (items: MenuItem[]) => {
+      items.forEach((item) => {
+        allNodeIds.add(item.id);
+        if (item.children && item.children.length > 0) {
+          collectNodeIds(item.children);
+        }
+      });
+    };
+    collectNodeIds(filteredMenus);
+    setExpandedNodes(allNodeIds);
+  };
 
   return (
     <div className="flex flex-col md:flex-row h-screen w-full">
@@ -51,7 +121,7 @@ const MenuTree: React.FC = () => {
         />
 
         {/* Expand/Collapse Actions */}
-        <MenuTreeActions filteredMenus={filteredMenus} setExpandedNodes={setExpandedNodes} />
+        <MenuTreeActions setExpandedNodes={setExpandedNodes} handleExpandAll={handleExpandAll} />
 
         {/* Menu Tree */}
         {isLoading ? (
@@ -60,14 +130,16 @@ const MenuTree: React.FC = () => {
           <div>Error loading menus. Please try again.</div>
         ) : filteredMenus.length > 0 ? (
           <ul className="relative list-none">
-            {filteredMenus?.map((menu: any) => (
+            {markCanAddChild(filteredMenus)?.map((menu: any) => (
               <MenuTreeNode
+                addChildMenu={addChildMenu}
                 key={menu.id}
                 menu={menu}
                 expandedNodes={expandedNodes}
                 setExpandedNodes={setExpandedNodes}
                 setSelectedMenu={setSelectedMenu}
                 setShowForm={setShowForm}
+                toggleExpand={toggleExpand}
               />
             ))}
           </ul>
@@ -83,6 +155,7 @@ const MenuTree: React.FC = () => {
             onSave={handleSave}
             initialData={selectedMenu}
             onCancel={() => setShowForm(false)}
+            handleExpandAll={handleExpandAll}
           />
         </div>
       )}

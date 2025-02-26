@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 type MenuTreeFiltersProps = {
   selectedFilter: string;
   setSelectedFilter: (filter: string) => void;
-  options: string[]; // Options should be an array of strings
+  options: string[]; 
 };
 
 const MenuTreeFilters: React.FC<MenuTreeFiltersProps> = ({

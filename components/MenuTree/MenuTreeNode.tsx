@@ -1,5 +1,6 @@
 import React from "react";
 import { AiOutlineDown, AiOutlineRight } from "react-icons/ai";
+import { FiPlus } from "react-icons/fi";
 import { MenuItem } from "../../types/types";
 
 type MenuTreeNodeProps = {
@@ -8,6 +9,9 @@ type MenuTreeNodeProps = {
   setExpandedNodes: React.Dispatch<React.SetStateAction<Set<string>>>;
   setSelectedMenu: (menu: MenuItem) => void;
   setShowForm: (show: boolean) => void;
+  addChildMenu: (menu: MenuItem) => void;
+  toggleExpand: (menuId: string) => void; 
+  maxDepth?: number;
 };
 
 const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
@@ -16,35 +20,37 @@ const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
   setExpandedNodes,
   setSelectedMenu,
   setShowForm,
+  addChildMenu,
+  maxDepth = 4,
+  toggleExpand,
 }) => {
-  const toggleExpand = (id: string) => {
-    setExpandedNodes((prevExpandedNodes) => {
-      const updatedNodes = new Set<string>(prevExpandedNodes);
-      if (updatedNodes.has(id)) {
-        updatedNodes.delete(id);
-      } else {
-        updatedNodes.add(id);
-      }
-      return updatedNodes;
-    });
-  };
+  const isExpanded = expandedNodes.has(menu.id);
 
+  const getLastChildId = (node: MenuItem): string => {
+    if (!node.children || node.children.length === 0) {
+      return node.id;
+    }
+    return getLastChildId(node.children[node.children.length - 1]);
+  };
+  
+  const canAddChild = menu.canAddChild ?? true;
   return (
     <li className="relative">
-      {/* Line to parent */}
       <div className="absolute top-0 left-0 w-px h-full bg-gray-300"></div>
       <div className="flex items-center relative pl-4">
-        {/* Horizontal line */}
         <div className="absolute left-0 top-1/2 w-4 h-px bg-gray-300"></div>
 
-        {menu.children?.length > 0 && (
+        {/* Expand/Collapse Button */}
+        {(menu.children?.length > 0 || menu.depth < maxDepth) && (
           <button
             className="p-1 text-gray-500 hover:text-gray-800"
-            onClick={() => toggleExpand(menu.id)}
+            onClick={() => toggleExpand(menu.id)} 
           >
-            {expandedNodes.has(menu.id) ? <AiOutlineDown size={16} /> : <AiOutlineRight size={16} />}
+            {isExpanded ? <AiOutlineDown size={16} /> : <AiOutlineRight size={16} />}
           </button>
         )}
+
+        {/* Menu Name */}
         <span
           className="cursor-pointer hover:text-blue-500"
           onClick={() => {
@@ -54,10 +60,20 @@ const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
         >
           {menu.name}
         </span>
+
+        {/* Add Child Button */}
+        {menu.depth < maxDepth && canAddChild && (
+          <button
+            className="ml-2 p-1 text-blue-500 hover:text-blue-700"
+            onClick={() => addChildMenu(menu)}
+          >
+            <FiPlus size={16} />
+          </button>
+        )}
       </div>
 
-      {/* Render children */}
-      {expandedNodes.has(menu.id) && menu.children && (
+      {/* Render Children */}
+      {isExpanded && menu.children && menu.children.length > 0 && (
         <ul className="pl-6 relative">
           {menu.children.map((child) => (
             <MenuTreeNode
@@ -67,6 +83,9 @@ const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
               setExpandedNodes={setExpandedNodes}
               setSelectedMenu={setSelectedMenu}
               setShowForm={setShowForm}
+              addChildMenu={addChildMenu}
+              maxDepth={maxDepth}
+              toggleExpand={toggleExpand} 
             />
           ))}
         </ul>

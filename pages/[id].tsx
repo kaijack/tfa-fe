@@ -25,12 +25,12 @@ const MenuPage = () => {
   const denormalizeName = (name: string) =>
     decodeURIComponent(name.replace(/-/g, " "));
 
-  const transformMenus = (data: any[]): MenuItem[] => {
-    return data.map((menu) => ({
+  const transformMenus = (data: MenuItem[]): MenuItem[] => {
+    return data?.map((menu) => ({
       id: menu.id || "",
       name: menu.name || "Unnamed Menu",
       depth: menu.depth || 0,
-      parent_id: menu.parent_id || null,
+      parent_id: menu.parent_id || "",
       parent_name: menu.parent_name || "",
       children: menu.children ? transformMenus(menu.children) : [],
     }));

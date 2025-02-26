@@ -2,30 +2,18 @@ import React from "react";
 import { MenuItem } from "../../types/types";
 
 type MenuTreeActionsProps = {
-  filteredMenus: MenuItem[];
-  setExpandedNodes: (nodes: Set<string>) => void;
+  setExpandedNodes: React.Dispatch<React.SetStateAction<Set<string>>>;
+  handleExpandAll: () => void;
 };
 
+
 const MenuTreeActions: React.FC<MenuTreeActionsProps> = ({
-  filteredMenus,
   setExpandedNodes,
+  handleExpandAll,
 }) => {
-  const handleExpandAll = () => {
-    const allNodeIds = new Set<string>();
-    const collectNodeIds = (items: MenuItem[]) => {
-      items.forEach((item) => {
-        allNodeIds.add(item.id);
-        if (item.children && item.children.length > 0) {
-          collectNodeIds(item.children);
-        }
-      });
-    };
-    collectNodeIds(filteredMenus);
-    setExpandedNodes(allNodeIds);
-  };
 
   const handleCollapseAll = () => {
-    setExpandedNodes(new Set<string>());
+    setExpandedNodes(() => new Set());
   };
 
   return (

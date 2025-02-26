@@ -38,13 +38,12 @@ const Sidebar: React.FC<SidebarProps> = ({ menu, loading, onMenuClick, menuName 
       setOpenItems(openNames);
     }
   };
-  console.log(menuName);
   
   useEffect(() => {
     if (currentPath?.includes(String(menuName))) {
-      updateOpenItems(currentPath); // Ensure data is available before updating
+      updateOpenItems(currentPath); 
     }
-  }, [menu, currentPath]); // Dependency array for when data is loaded
+  }, [menu, currentPath]); 
   
   const toggleItem = (name: string, hasChildren: boolean) => {
     if (hasChildren) {
