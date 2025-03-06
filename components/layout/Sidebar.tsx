@@ -11,10 +11,11 @@ type MenuItem = {
 type SidebarProps = {
   menu: MenuItem[];
   loading: boolean;
+  menuName: string;
   onMenuClick: (name: string) => void;
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ menu, loading, onMenuClick }) => {
+const Sidebar: React.FC<SidebarProps> = ({ menu, loading, onMenuClick, menuName }) => {
   const router = useRouter();
   const currentPath = decodeURIComponent(router.asPath.replace("/", ""));
   const [openItems, setOpenItems] = useState<string[]>([]);
@@ -44,6 +45,8 @@ const Sidebar: React.FC<SidebarProps> = ({ menu, loading, onMenuClick }) => {
       }
     }
   }, [menu, currentPath]);
+  
+  console.log(menuName);
   
   const toggleItem = (name: string, hasChildren: boolean) => {
     setOpenItems((prev) =>
