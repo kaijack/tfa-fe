@@ -3,8 +3,8 @@ module.exports = {
   content: [
     "./pages/**/*.{ts,tsx,js,jsx}",
     "./components/**/*.{ts,tsx,js,jsx}",
-    "./app/**/*.{ts,tsx,js,jsx}", // If you're using the new Next.js app directory
-    "./style/**/*.{ts,tsx,js,jsx,css}", // If you're using the new Next.js app directory
+    "./app/**/*.{ts,tsx,js,jsx}",
+    "./style/**/*.{ts,tsx,js,jsx,css}",
   ],
   theme: {
     extend: {

@@ -24,3 +24,11 @@ export interface MenuFormProps {
   handleExpandAll: () => void; 
 }
 
+
+
+export interface SidebarProps  {
+  menu: MenuItem[];
+  loading: boolean;
+  menuName: string;
+  onMenuClick: (name: string) => void;
+};

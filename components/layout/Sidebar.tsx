@@ -1,19 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FaFolder, FaTh } from "react-icons/fa";
 import { useRouter } from "next/router";
+import { MenuItem, SidebarProps } from "types/types";
 
-type MenuItem = {
-  name: string;
-  depth: number;
-  children?: MenuItem[];
-};
 
-type SidebarProps = {
-  menu: MenuItem[];
-  loading: boolean;
-  menuName: string;
-  onMenuClick: (name: string) => void;
-};
 
 const Sidebar: React.FC<SidebarProps> = ({ menu, loading, onMenuClick, menuName }) => {
   const router = useRouter();
@@ -25,7 +15,6 @@ const Sidebar: React.FC<SidebarProps> = ({ menu, loading, onMenuClick, menuName 
       const findAncestors = (items: MenuItem[], target: string, path: string[] = []): string[] | null => {
         for (const item of items) {
           const newPath = [...path, item.name];
-          console.log(item.name, target);
           
           if (item.name.toLowerCase() === target.toLowerCase()) {
             return newPath;
@@ -46,16 +35,12 @@ const Sidebar: React.FC<SidebarProps> = ({ menu, loading, onMenuClick, menuName 
     }
   }, [menu, currentPath]);
   
-  console.log(menuName);
-  
   const toggleItem = (name: string, hasChildren: boolean) => {
     setOpenItems((prev) =>
       prev.includes(name) ? prev.filter((item) => item !== name) : [...prev, name]
     );
     onMenuClick(name);
-  };
-  // console.log(openItems);
-  
+  };  
 
   const renderMenu = (items: MenuItem[], depth = 0) => (
     <ul className="text-sm">

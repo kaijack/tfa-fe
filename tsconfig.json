@@ -8,7 +8,7 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true, // Enables strict type checking (recommended)
+    "strict": true, 
     "noEmit": true,
     "incremental": true,
     "esModuleInterop": true,
@@ -17,7 +17,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "baseUrl": ".", // Enables absolute imports
+    "baseUrl": ".", 
     "paths": {
       "@/components/*": [
         "components/*"
