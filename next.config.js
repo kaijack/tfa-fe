@@ -2,5 +2,9 @@
 module.exports = {
   output: "export",
   distDir: "out",
-  trailingSlash: true, 
+  trailingSlash: true,
+  reactStrictMode: true,
+  images: {
+    unoptimized: true,
+  },
 };

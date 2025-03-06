@@ -1,8 +1,17 @@
-// pages/404.tsx
-import { FC } from "react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-const Custom404: FC = () => {
-  return <h1>404 - Page Not Found</h1>;
+const NotFoundPage = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const pathname = window.location.pathname;
+      router.replace(`/${pathname}`);
+    }
+  }, []);
+
+  return <p>Redirecting...</p>;
 };
 
-export default Custom404;
+export default NotFoundPage;
