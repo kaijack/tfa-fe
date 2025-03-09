@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/router";
 import { updateMenu, useCreateMenu } from "@/api/menus";
-import { MenuFormProps } from "../../types/types";
+import { MenuFormProps } from "@/types/types";
 import { useQueryClient } from "@tanstack/react-query";
 
 const MenuForm: React.FC<MenuFormProps> = ({ onSave, initialData = null, handleExpandAll }) => {

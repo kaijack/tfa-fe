@@ -1,12 +1,12 @@
 import React from "react";
 import { AiOutlineDown, AiOutlineRight } from "react-icons/ai";
 import { FiPlus } from "react-icons/fi";
-import { MenuItem } from "../../types/types";
+import { MenuItem } from "@/types/types";
 
 type MenuTreeNodeProps = {
   menu: MenuItem;
   expandedNodes: Set<string>;
-  setExpandedNodes: React.Dispatch<React.SetStateAction<Set<string>>>;
+  setExpandedNodes: (nodes: Set<string>) => void;
   setSelectedMenu: (menu: MenuItem) => void;
   setShowForm: (show: boolean) => void;
   addChildMenu: (menu: MenuItem) => void;

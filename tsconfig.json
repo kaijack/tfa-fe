@@ -19,10 +19,10 @@
     "jsx": "preserve",
     "baseUrl": ".", 
     "paths": {
-      "@/components/*": [
-        "components/*"
-      ],
-      "@styles/*": ["styles/*"],
+      "@/components/*": ["components/*"],
+      "@/redux/*": ["redux/*"],
+      "@/types/*": ["types/*"],
+      "@/styles/*": ["styles/*"],
       "@/api/*": [
         "api/*"
       ]
