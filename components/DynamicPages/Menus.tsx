@@ -90,7 +90,7 @@ const MenuTree: React.FC = () => {
     collectNodeIds(menus);
     dispatch(setExpandedNodes(allNodeIds));
   };
-
+  
   return (
     <div className="flex flex-col md:flex-row h-screen w-full">
       {/* Sidebar Panel */}

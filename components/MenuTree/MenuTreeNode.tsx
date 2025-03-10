@@ -10,7 +10,7 @@ type MenuTreeNodeProps = {
   setSelectedMenu: (menu: MenuItem) => void;
   setShowForm: (show: boolean) => void;
   addChildMenu: (menu: MenuItem) => void;
-  toggleExpand: (menuId: string) => void; 
+  toggleExpand: (menuId: string) => void;
   maxDepth?: number;
 };
 
@@ -21,7 +21,7 @@ const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
   setSelectedMenu,
   setShowForm,
   addChildMenu,
-  maxDepth = 4,
+  maxDepth = 0,
   toggleExpand,
 }) => {
   const isExpanded = expandedNodes.has(menu.id);
@@ -32,8 +32,7 @@ const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
     }
     return getLastChildId(node.children[node.children.length - 1]);
   };
-  
-  const canAddChild = menu.canAddChild ?? true;
+
   return (
     <li className="relative">
       <div className="absolute top-0 left-0 w-px h-full bg-gray-300"></div>
@@ -41,10 +40,10 @@ const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
         <div className="absolute left-0 top-1/2 w-4 h-px bg-gray-300"></div>
 
         {/* Expand/Collapse Button */}
-        {(menu.children?.length > 0 || menu.depth < maxDepth) && (
+        {(menu.children?.length > 0 || menu.depth < maxDepth && menu.depth === 0 && maxDepth === 0) && (
           <button
             className="p-1 text-gray-500 hover:text-gray-800"
-            onClick={() => toggleExpand(menu.id)} 
+            onClick={() => toggleExpand(menu.id)}
           >
             {isExpanded ? <AiOutlineDown size={16} /> : <AiOutlineRight size={16} />}
           </button>
@@ -62,12 +61,16 @@ const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
         </span>
 
         {/* Add Child Button */}
-        {menu.depth < maxDepth && canAddChild && (
+        {/* {(Number(menu?.children?.length) === (maxDepth - menu?.children?.length) || menu.depth < maxDepth && menu.depth === 0 && maxDepth === 0) && ( */}
+        { menu.canAddChild && (
           <button
             className="ml-2 p-1 text-blue-500 hover:text-blue-700"
             onClick={() => addChildMenu(menu)}
           >
             <FiPlus size={16} />
+            {/* {(menu?.children?.length)} <br />
+            {maxDepth} <br />
+            {menu.depth} */}
           </button>
         )}
       </div>
@@ -85,7 +88,7 @@ const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
               setShowForm={setShowForm}
               addChildMenu={addChildMenu}
               maxDepth={maxDepth}
-              toggleExpand={toggleExpand} 
+              toggleExpand={toggleExpand}
             />
           ))}
         </ul>

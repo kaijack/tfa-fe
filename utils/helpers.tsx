@@ -34,19 +34,47 @@ export const findMenuById = (menuList: MenuItem[], normalizedId: string): MenuIt
 };
 
 
-export const markCanAddChild = (menus: MenuItem[]): MenuItem[] => {
+export const markCanAddChild = (menus: MenuItem[], depth: number = 0): MenuItem[] => {
     return menus.map((menu, index) => {
-        const updatedChildren = markCanAddChild(menu.children);
+        const updatedChildren = markCanAddChild(menu.children, depth + 1);
+        const childrenLength = menu.children.length;
+        
+        if (childrenLength > 0 && depth >= 3) {
+            const isThirdToLastChild = depth > 2 ? true : false;
+            return {
+                ...menu,
+                children: updatedChildren,
+                canAddChild: isThirdToLastChild,
+            };
+        }
+        
+        if (depth > 4) {
+            return {
+                ...menu,
+                children: updatedChildren,
+                canAddChild: false,
+            };
+        }
 
-        const lastChild = updatedChildren.length > 0 ? updatedChildren[updatedChildren.length - 1] : null;
+        
+        if (childrenLength <= 0 && depth <= 1) {
+            return {
+                ...menu,
+                children: updatedChildren,
+                canAddChild: true,
+            };
+        }
+
         return {
             ...menu,
             children: updatedChildren,
-            canAddChild: index === 0 && lastChild !== null && lastChild.children.length === 0,
-
+            canAddChild: false,
         };
     });
 };
+
+
+
 
 
 export const collectNodeIds = (items: MenuItem[]): Set<string> => {

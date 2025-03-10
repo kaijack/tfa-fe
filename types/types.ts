@@ -28,7 +28,9 @@ export interface MenuFormProps {
 
 export interface SidebarProps  {
   menu: MenuItem[];
+  setIsSidebarOpen: (isOpen: boolean) => void;
   loading: boolean;
+  isSidebarOpen: boolean;
   menuName: string;
   onMenuClick: (name: string) => void;
 };

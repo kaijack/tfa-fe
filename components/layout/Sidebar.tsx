@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { FaFolder, FaTh } from "react-icons/fa";
+import { FaFolder, FaTh, FaBars, FaTimes } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { MenuItem, SidebarProps } from "types/types";
 
-
-
-const Sidebar: React.FC<SidebarProps> = ({ menu, loading, onMenuClick, menuName }) => {
+const Sidebar: React.FC<SidebarProps> = ({ menu, loading, onMenuClick, isSidebarOpen, setIsSidebarOpen }) => {
   const router = useRouter();
   const currentPath = decodeURIComponent(router.asPath.replace("/", ""));
   const [openItems, setOpenItems] = useState<string[]>([]);
@@ -15,7 +13,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menu, loading, onMenuClick, menuName 
       const findAncestors = (items: MenuItem[], target: string, path: string[] = []): string[] | null => {
         for (const item of items) {
           const newPath = [...path, item.name];
-          
+
           if (item.name.toLowerCase() === target.toLowerCase()) {
             return newPath;
           }
@@ -26,21 +24,20 @@ const Sidebar: React.FC<SidebarProps> = ({ menu, loading, onMenuClick, menuName 
         }
         return null;
       };
-  
+
       const matchedPath = findAncestors(menu, currentPath?.replace("/", ''));
-      
       if (matchedPath) {
         setOpenItems(matchedPath);
       }
     }
   }, [menu, currentPath]);
-  
+
   const toggleItem = (name: string, hasChildren: boolean) => {
     setOpenItems((prev) =>
       prev.includes(name) ? prev.filter((item) => item !== name) : [...prev, name]
     );
     onMenuClick(name);
-  };  
+  };
 
   const renderMenu = (items: MenuItem[], depth = 0) => (
     <ul className="text-sm">
@@ -48,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menu, loading, onMenuClick, menuName 
         <li key={item.name} className="mb-1">
           <div
             className={`flex items-center relative cursor-pointer rounded-md px-3 py-2 hover:bg-gray-700 
-              ${openItems[openItems?.length -1] === item.name ? "bg-gray-700 text-white" : "text-gray-400"}`}
+              ${openItems[openItems?.length - 1] === item.name ? "bg-gray-700 text-white" : "text-gray-400"}`}
             style={{ paddingLeft: `${depth * 16 + 16}px` }}
             onClick={() => toggleItem(item.name, !!item.children?.length)}
           >
@@ -64,11 +61,38 @@ const Sidebar: React.FC<SidebarProps> = ({ menu, loading, onMenuClick, menuName 
   );
 
   return (
-    <div className="h-screen w-64 bg-gray-900 text-white">
-      <div className="p-4 text-lg font-bold">Sidebar</div>
-      <nav className="p-2">
-        {loading ? <p className="text-gray-400">Loading...</p> : menu.length > 0 ? renderMenu(menu) : <p className="text-gray-400">No menu available</p>}
-      </nav>
+    <div className="flex">
+      {/* ✅ Toggle Button */}
+      <button
+        className={`absolute top-4 transition-all duration-300 z-50 p-2 rounded-md ${
+          isSidebarOpen ? "left-[200px]" : "left-4"
+        }`}
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      >
+          <img
+            src="/icons/menuClose.svg"
+            alt="Menu Close"
+            className="w-5 h-5 filter brightness-0 invert" 
+          />
+      </button>
+  
+      {/* ✅ Sidebar with transition */}
+      <div
+        className={`h-screen bg-gray-900 text-white transition-all duration-300 ${
+          isSidebarOpen ? "w-64" : "w-0 overflow-hidden"
+        }`}
+      >
+        <div className="p-4 text-lg font-bold">Sidebar</div>
+        <nav className="p-2">
+          {loading ? (
+            <p className="text-gray-400">Loading...</p>
+          ) : menu.length > 0 ? (
+            renderMenu(menu)
+          ) : (
+            <p className="text-gray-400">No menu available</p>
+          )}
+        </nav>
+      </div>
     </div>
   );
 };
