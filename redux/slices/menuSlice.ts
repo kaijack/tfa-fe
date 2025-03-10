@@ -8,7 +8,7 @@ type MenuState = {
 
 const initialState: MenuState = {
   selectedMenu: null,
-  expandedNodes: new Set(),
+  expandedNodes: new Set<string>(),  
 };
 
 const menuSlice = createSlice({

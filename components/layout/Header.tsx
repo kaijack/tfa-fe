@@ -9,13 +9,13 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ title, isSidebarOpen, setIsSidebarOpen }) => {
   return (
-    <div className="flex flex-col items-start px-4">
+    <div className="flex flex-col items-start pl-4">
       {/* Button */}
       <div className="flex items-center space-x-2 text-sm mt-3">
         {!isSidebarOpen && (
           <button
-            className={`top-4 transition-all duration-300 z-50 p-2 rounded-md text-black ${
-              isSidebarOpen ? "left-[200px]" : "left-4"
+            className={`top-5 transition-all duration-300 z-50 rounded-md text-black ${
+              isSidebarOpen ? "left-[100px]" : "left-4"
             }`}
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >

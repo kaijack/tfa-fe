@@ -17,7 +17,7 @@ const MenuTree: React.FC = () => {
   const { data: menus = [], isLoading, isError } = useGetMenus();
 
   const selectedMenu = useSelector((state: RootState) => state.menu.selectedMenu);
-  const expandedNodes = useSelector((state: RootState) => new Set(state.menu.expandedNodes));
+  const expandedNodes = useSelector((state: RootState) => new Set<string>(state.menu.expandedNodes));
 
   const [selectedFilter, setSelectedFilter] = useState<string>("");
   const [showForm, setShowForm] = useState(false);
