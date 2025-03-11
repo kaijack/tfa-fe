@@ -1,14 +1,9 @@
 import React, { useState } from "react";
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
+import { LayoutProps } from "@/types/types";
 
-type LayoutProps = {
-  children: React.ReactNode;
-  menu: any[];
-  loading: boolean;
-  menuName: string;
-  onMenuClick: (name: string) => void;
-};
+
 
 const Layout: React.FC<LayoutProps> = ({ children, menu, loading, menuName, onMenuClick }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);

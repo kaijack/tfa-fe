@@ -1,11 +1,9 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { setExpandedNodes } from "@/redux/slices/menuSlice";
+import { MenuTreeActionsProps } from "@/types/types";
 
-type MenuTreeActionsProps = {
-  setExpandedNodes: (nodes: Set<string>) => void;
-  handleExpandAll: () => void;
-};
+
 
 const MenuTreeActions: React.FC<MenuTreeActionsProps> = ({ handleExpandAll }) => {
   const dispatch = useDispatch();

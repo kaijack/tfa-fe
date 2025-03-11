@@ -1,11 +1,8 @@
+import { HeaderProps } from "@/types/types";
 import React from "react";
 import { FaFolder } from "react-icons/fa";
 
-type HeaderProps = {
-  title: string;
-  isSidebarOpen: boolean;
-  setIsSidebarOpen: (isOpen: boolean) => void;
-};
+
 
 const Header: React.FC<HeaderProps> = ({ title, isSidebarOpen, setIsSidebarOpen }) => {
   return (

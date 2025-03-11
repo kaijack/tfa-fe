@@ -4,7 +4,7 @@ import { updateMenu, useCreateMenu } from "@/api/menus";
 import { MenuFormProps } from "@/types/types";
 import { useQueryClient } from "@tanstack/react-query";
 
-const MenuForm: React.FC<MenuFormProps> = ({ onSave, initialData = null, handleExpandAll }) => {
+const MenuForm: React.FC<MenuFormProps> = ({ initialData = null }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 

@@ -1,10 +1,6 @@
+import { MenuTreeFiltersProps } from "@/types/types";
 import React, { useEffect } from "react";
 
-type MenuTreeFiltersProps = {
-  selectedFilter: string;
-  setSelectedFilter: (filter: string) => void;
-  options: string[]; 
-};
 
 const MenuTreeFilters: React.FC<MenuTreeFiltersProps> = ({
   selectedFilter,

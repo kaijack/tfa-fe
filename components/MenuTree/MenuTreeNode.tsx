@@ -1,18 +1,7 @@
 import React from "react";
 import { AiOutlineDown, AiOutlineRight } from "react-icons/ai";
 import { FiPlus } from "react-icons/fi";
-import { MenuItem } from "@/types/types";
-
-type MenuTreeNodeProps = {
-  menu: MenuItem;
-  expandedNodes: Set<string>;
-  setExpandedNodes: (nodes: Set<string>) => void;
-  setSelectedMenu: (menu: MenuItem) => void;
-  setShowForm: (show: boolean) => void;
-  addChildMenu: (menu: MenuItem) => void;
-  toggleExpand: (menuId: string) => void;
-  maxDepth?: number;
-};
+import { MenuItem, MenuTreeNodeProps } from "@/types/types";
 
 const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
   menu,
@@ -58,7 +47,7 @@ const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
           menu?.children?.length === 0 ?
 
             <span
-              className="cursor-pointer hover:text-blue-500 pl-7"
+              className="cursor-pointer hover:text-blue-500 pl-7 text-[#101828]"
               onClick={() => {
                 setSelectedMenu(menu);
                 setShowForm(true);
@@ -68,7 +57,7 @@ const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
             </span> :
 
             <span
-              className="cursor-pointer hover:text-blue-500 pl-1"
+              className="cursor-pointer hover:text-blue-500 pl-1 text-[#101828]"
               onClick={() => {
                 setSelectedMenu(menu);
                 setShowForm(true);
@@ -81,7 +70,7 @@ const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
         {/* Add Child Button */}
         {menu.canAddChild && (
           <button
-            className="ml-2 p-1 text-blue-500 hover:text-blue-700"
+            className="ml-2 p-1 text-blue-500 hover:text-blue-700 "
             onClick={() => addChildMenu(menu)}
           >
             <FiPlus size={16} />
@@ -91,7 +80,7 @@ const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
 
       {/* Render Children */}
       {isExpanded && menu.children && menu.children.length > 0 && (
-        <ul className="pl-6 relative">
+        <ul className="pl-6  relative">
           {menu.children.map((child) => (
             <MenuTreeNode
               key={child.id}
