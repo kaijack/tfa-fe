@@ -35,10 +35,12 @@ const MenuTreeNode: React.FC<MenuTreeNodeProps> = ({
 
   return (
     <li className="relative">
-      <div className="absolute top-0 left-0 w-px h-full bg-gray-300"></div>
+      {
+        menu.depth === 1 ? <div className="absolute top-0 left-0 w-px h-[15px] bg-gray-300"></div> : menu.depth > 1 && <div className="absolute top-0 left-0 w-px h-full bg-gray-300"></div>
+      }
       <div className="flex items-center relative pl-4">
         {
-          menu?.children?.length === 0 ? <div className="absolute left-0 top-1/2 w-9 h-px bg-gray-300"></div> : <div className="absolute left-0 top-1/2 w-4 h-px bg-gray-300"></div>
+          menu?.depth === 1 ? <div className="absolute left-0 top-3.5 w-4 h-px bg-gray-300"></div> : menu.depth > 1 && <div className="absolute left-0 top-1/2 w-4 h-px bg-gray-300"></div>
         }
 
         {/* Expand/Collapse Button */}
