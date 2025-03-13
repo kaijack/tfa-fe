@@ -64,6 +64,13 @@ export const markCanAddChild = (menus: MenuItem[], depth: number = 0): MenuItem[
                 canAddChild: true,
             };
         }
+        if (childrenLength === 1 && depth >= 1) {
+            return {
+                ...menu,
+                children: updatedChildren,
+                canAddChild: true,
+            };
+        }
 
         return {
             ...menu,
